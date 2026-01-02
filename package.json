@@ -1,0 +1,39 @@
+{
+  "name": "cc-mirror",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "description": "Create multiple isolated Claude Code variants",
+  "bin": {
+    "cc-mirror": "dist/cc-mirror.mjs"
+  },
+  "scripts": {
+    "dev": "tsx src/cli/index.ts",
+    "tui": "tsx src/cli/index.ts --tui",
+    "bundle": "tsx scripts/bundle.ts",
+    "prepack": "tsx scripts/bundle.ts",
+    "render:tui-svg": "node --import tsx scripts/render-tui-svg.ts",
+    "test": "node --test --import tsx test/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "gradient-string": "^3.0.0",
+    "ink": "^4.0.0",
+    "ink-big-text": "^2.0.0",
+    "ink-box": "^1.0.0",
+    "ink-gradient": "^3.0.0",
+    "ink-select-input": "^5.0.0",
+    "ink-spinner": "^5.0.0",
+    "ink-text-input": "^5.0.0",
+    "react": "^18.3.1",
+    "tweakcc": "^3.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.12",
+    "esbuild": "^0.24.0",
+    "ink-testing-library": "^4.0.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.7.2"
+  }
+}
