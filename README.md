@@ -136,7 +136,7 @@ Each provider has an optional color theme:
 
 - **zai** — Dark carbon with gold accents
 - **minimax** — Coral/red/orange spectrum
-- **openrouter** — Teal/cyan tones
+- **openrouter** — Teal/cyan (matching ASCII splash)
 - **litellm** — Sky blue accents
 
 Themes are applied via [tweakcc](https://github.com/tweak-cc/tweakcc).

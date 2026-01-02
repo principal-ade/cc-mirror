@@ -93,7 +93,7 @@ const PROVIDERS = [
     key: 'openrouter',
     name: 'OpenRouter',
     apiKey: 'test-openrouter-key',
-    expectedThemeId: 'openrouter-slate',
+    expectedThemeId: 'openrouter-teal',
     expectedSplashStyle: 'openrouter',
     colorCode: '\\x1b[38;5;43m', // Teal
   },

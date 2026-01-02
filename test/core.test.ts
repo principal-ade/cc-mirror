@@ -206,7 +206,7 @@ test('openrouter brand preset writes tweakcc config', () => {
     const tweakConfigPath = path.join(rootDir, 'openrouter', 'tweakcc', 'config.json');
     assert.ok(fs.existsSync(tweakConfigPath));
     const tweakConfig = JSON.parse(readFile(tweakConfigPath)) as { settings?: { themes?: { id?: string }[] } };
-    assert.equal(tweakConfig.settings?.themes?.[0]?.id, 'openrouter-slate');
+    assert.equal(tweakConfig.settings?.themes?.[0]?.id, 'openrouter-teal');
 
     cleanup(rootDir);
     cleanup(binDir);

@@ -276,14 +276,14 @@ export const App: React.FC<AppProps> = ({
         case 'quick-api-key':
           setScreen('quick-provider');
           break;
-        case 'quick-model-sonnet':
+        case 'quick-model-opus':
           setScreen('quick-api-key');
           break;
-        case 'quick-model-opus':
-          setScreen('quick-model-sonnet');
+        case 'quick-model-sonnet':
+          setScreen('quick-model-opus');
           break;
         case 'quick-model-haiku':
-          setScreen('quick-model-opus');
+          setScreen('quick-model-sonnet');
           break;
         case 'quick-name':
           setScreen(provider?.requiresModelMapping ? 'quick-model-haiku' : 'quick-api-key');
@@ -291,19 +291,32 @@ export const App: React.FC<AppProps> = ({
         case 'quick-provider':
           setScreen('home');
           break;
-        case 'create-model-sonnet':
+        case 'create-model-opus':
           setScreen('create-api-key');
           break;
-        case 'create-model-opus':
-          setScreen('create-model-sonnet');
+        case 'create-model-sonnet':
+          setScreen('create-model-opus');
           break;
         case 'create-model-haiku':
-          setScreen('create-model-opus');
+          setScreen('create-model-sonnet');
           break;
         // Settings - back to home
         case 'settings-root':
         case 'settings-bin':
           setScreen('home');
+          break;
+        // Model configuration screens - back through flow
+        case 'manage-models-opus':
+          setScreen('manage-actions');
+          break;
+        case 'manage-models-sonnet':
+          setScreen('manage-models-opus');
+          break;
+        case 'manage-models-haiku':
+          setScreen('manage-models-sonnet');
+          break;
+        case 'manage-models-done':
+          setScreen('manage-actions');
           break;
         // Completion/done screens - back to home
         case 'create-done':
@@ -512,6 +525,63 @@ export const App: React.FC<AppProps> = ({
     setScreen('manage-tweak-done');
   }, [screen, selectedVariant]);
 
+  // Save model configuration for existing variant
+  useEffect(() => {
+    if (screen !== 'manage-models-saving') return;
+    if (!selectedVariant) return;
+    let cancelled = false;
+
+    const saveModels = async () => {
+      try {
+        setProgressLines(['Saving model configuration...']);
+        const opts = {
+          tweakccStdio: 'pipe' as const,
+          binDir,
+          noTweak: true, // Don't re-run tweakcc, just update settings
+          modelOverrides: {
+            opus: modelOpus.trim() || undefined,
+            sonnet: modelSonnet.trim() || undefined,
+            haiku: modelHaiku.trim() || undefined,
+          },
+          onProgress: (step: string) => setProgressLines(prev => [...prev, step]),
+        };
+        // Use async version if available
+        if (core.updateVariantAsync) {
+          await core.updateVariantAsync(rootDir, selectedVariant.name, opts);
+        } else {
+          core.updateVariant(rootDir, selectedVariant.name, opts);
+        }
+        if (cancelled) return;
+        setDoneLines([`Updated model mapping for ${selectedVariant.name}`]);
+        setCompletionSummary([
+          `Opus: ${modelOpus.trim() || '(not set)'}`,
+          `Sonnet: ${modelSonnet.trim() || '(not set)'}`,
+          `Haiku: ${modelHaiku.trim() || '(not set)'}`,
+        ]);
+        setCompletionNextSteps([
+          `Run: ${selectedVariant.name}`,
+          'Models are saved in settings.json',
+        ]);
+        setCompletionHelp(['Use "Update" to refresh binary while keeping models']);
+        setCompletionShareUrl(null);
+        setShareStatus(null);
+      } catch (error) {
+        if (cancelled) return;
+        const message = error instanceof Error ? error.message : String(error);
+        setDoneLines([`Failed: ${message}`]);
+        setCompletionSummary([]);
+        setCompletionNextSteps([]);
+        setCompletionHelp([]);
+        setCompletionShareUrl(null);
+        setShareStatus(null);
+      }
+      if (!cancelled) setScreen('manage-models-done');
+    };
+
+    saveModels();
+    return () => { cancelled = true; };
+  }, [screen, selectedVariant, rootDir, binDir, modelOpus, modelSonnet, modelHaiku, core]);
+
   useEffect(() => {
     if (screen !== 'updateAll') return;
     let cancelled = false;
@@ -676,7 +746,7 @@ export const App: React.FC<AppProps> = ({
           setInstallSkill(defaults.skillInstall);
           setShellEnv(keyDefaults.detectedFrom === 'Z_AI_API_KEY' ? false : defaults.shellEnv);
           if (keyDefaults.skipPrompt) {
-            setScreen(requiresModels ? 'quick-model-sonnet' : 'quick-name');
+            setScreen(requiresModels ? 'quick-model-opus' : 'quick-name');
           } else {
             setScreen('quick-api-key');
           }
@@ -694,28 +764,37 @@ export const App: React.FC<AppProps> = ({
         value={apiKey}
         onChange={setApiKey}
         onSubmit={() =>
-          setScreen(provider?.requiresModelMapping ? 'quick-model-sonnet' : 'quick-name')
+          setScreen(provider?.requiresModelMapping ? 'quick-model-opus' : 'quick-name')
         }
         detectedFrom={apiKeyDetectedFrom || undefined}
       />
     );
   }
-  if (screen === 'quick-model-sonnet') {
+
+  // Model mapping screens - order: Opus -> Sonnet -> Haiku (most capable to least)
+  // These map Claude's internal model names to your provider's model identifiers
+  if (screen === 'quick-model-opus') {
     return (
       <Frame>
-        <Header title="Model Mapping" subtitle="Map aliases for /model (Sonnet)" />
+        <Header title="Model Mapping (1/3)" subtitle="Configure which models to use" />
         <Divider />
-        <Box marginY={1}>
+        <Box flexDirection="column" marginY={1}>
+          <Box marginBottom={1}>
+            <Text color={colors.textMuted}>
+              Claude Code uses model aliases like "opus", "sonnet", "haiku".{'\n'}
+              Map these to your provider's actual model names.
+            </Text>
+          </Box>
           <TextField
-            label="Default Sonnet model"
-            value={modelSonnet}
-            onChange={setModelSonnet}
+            label="Opus model (most capable)"
+            value={modelOpus}
+            onChange={setModelOpus}
             onSubmit={() => {
-              if (!modelSonnet.trim()) return;
-              setScreen('quick-model-opus');
+              if (!modelOpus.trim()) return;
+              setScreen('quick-model-sonnet');
             }}
-            placeholder="e.g. anthropic/claude-3.5-sonnet"
-            hint="Required for OpenRouter/Local LLMs"
+            placeholder={providerKey === 'openrouter' ? 'anthropic/claude-3-opus' : 'ollama/llama3.2:70b'}
+            hint="Used for complex reasoning tasks"
           />
         </Box>
         <Divider />
@@ -724,22 +803,22 @@ export const App: React.FC<AppProps> = ({
     );
   }
 
-  if (screen === 'quick-model-opus') {
+  if (screen === 'quick-model-sonnet') {
     return (
       <Frame>
-        <Header title="Model Mapping" subtitle="Map aliases for /model (Opus)" />
+        <Header title="Model Mapping (2/3)" subtitle="Configure which models to use" />
         <Divider />
-        <Box marginY={1}>
+        <Box flexDirection="column" marginY={1}>
           <TextField
-            label="Default Opus model"
-            value={modelOpus}
-            onChange={setModelOpus}
+            label="Sonnet model (balanced)"
+            value={modelSonnet}
+            onChange={setModelSonnet}
             onSubmit={() => {
-              if (!modelOpus.trim()) return;
+              if (!modelSonnet.trim()) return;
               setScreen('quick-model-haiku');
             }}
-            placeholder="e.g. anthropic/claude-3-opus"
-            hint="Required for OpenRouter/Local LLMs"
+            placeholder={providerKey === 'openrouter' ? 'anthropic/claude-3.5-sonnet' : 'ollama/llama3.2'}
+            hint="Default model for most tasks"
           />
         </Box>
         <Divider />
@@ -751,19 +830,19 @@ export const App: React.FC<AppProps> = ({
   if (screen === 'quick-model-haiku') {
     return (
       <Frame>
-        <Header title="Model Mapping" subtitle="Map aliases for /model (Haiku)" />
+        <Header title="Model Mapping (3/3)" subtitle="Configure which models to use" />
         <Divider />
-        <Box marginY={1}>
+        <Box flexDirection="column" marginY={1}>
           <TextField
-            label="Default Haiku model"
+            label="Haiku model (fastest)"
             value={modelHaiku}
             onChange={setModelHaiku}
             onSubmit={() => {
               if (!modelHaiku.trim()) return;
               setScreen('quick-name');
             }}
-            placeholder="e.g. anthropic/claude-3-haiku"
-            hint="Required for OpenRouter/Local LLMs"
+            placeholder={providerKey === 'openrouter' ? 'anthropic/claude-3-haiku' : 'ollama/llama3.2'}
+            hint="Used for quick tasks and subagents"
           />
         </Box>
         <Divider />
@@ -939,9 +1018,25 @@ export const App: React.FC<AppProps> = ({
         value={apiKey}
         onChange={setApiKey}
         onSubmit={() =>
-          setScreen(provider?.requiresModelMapping ? 'create-model-sonnet' : 'create-root')
+          setScreen(provider?.requiresModelMapping ? 'create-model-opus' : 'create-root')
         }
         detectedFrom={apiKeyDetectedFrom || undefined}
+      />
+    );
+  }
+
+  // Advanced create - model mapping (Opus -> Sonnet -> Haiku)
+  if (screen === 'create-model-opus') {
+    return (
+      <InputStep
+        label="Opus model (most capable)"
+        hint="For complex reasoning. Example: anthropic/claude-3-opus"
+        value={modelOpus}
+        onChange={setModelOpus}
+        onSubmit={() => {
+          if (!modelOpus.trim()) return;
+          setScreen('create-model-sonnet');
+        }}
       />
     );
   }
@@ -949,27 +1044,12 @@ export const App: React.FC<AppProps> = ({
   if (screen === 'create-model-sonnet') {
     return (
       <InputStep
-        label="Default Sonnet model"
-        hint="Required for OpenRouter/Local LLMs (ANTHROPIC_DEFAULT_SONNET_MODEL)."
+        label="Sonnet model (balanced)"
+        hint="Default for most tasks. Example: anthropic/claude-3.5-sonnet"
         value={modelSonnet}
         onChange={setModelSonnet}
         onSubmit={() => {
           if (!modelSonnet.trim()) return;
-          setScreen('create-model-opus');
-        }}
-      />
-    );
-  }
-
-  if (screen === 'create-model-opus') {
-    return (
-      <InputStep
-        label="Default Opus model"
-        hint="Required for OpenRouter/Local LLMs (ANTHROPIC_DEFAULT_OPUS_MODEL)."
-        value={modelOpus}
-        onChange={setModelOpus}
-        onSubmit={() => {
-          if (!modelOpus.trim()) return;
           setScreen('create-model-haiku');
         }}
       />
@@ -979,8 +1059,8 @@ export const App: React.FC<AppProps> = ({
   if (screen === 'create-model-haiku') {
     return (
       <InputStep
-        label="Default Haiku model"
-        hint="Required for OpenRouter/Local LLMs (ANTHROPIC_DEFAULT_HAIKU_MODEL)."
+        label="Haiku model (fastest)"
+        hint="For quick tasks and subagents. Example: anthropic/claude-3-haiku"
         value={modelHaiku}
         onChange={setModelHaiku}
         onSubmit={() => {
@@ -1262,6 +1342,13 @@ export const App: React.FC<AppProps> = ({
       <VariantActionsScreen
         meta={selectedVariant}
         onUpdate={() => setScreen('manage-update')}
+        onConfigureModels={() => {
+          // Reset model inputs and start model configuration
+          setModelOpus('');
+          setModelSonnet('');
+          setModelHaiku('');
+          setScreen('manage-models-opus');
+        }}
         onTweak={() => setScreen('manage-tweak')}
         onRemove={() => setScreen('manage-remove')}
         onBack={() => setScreen('manage')}
@@ -1306,6 +1393,97 @@ export const App: React.FC<AppProps> = ({
         onDone={value => {
           if (value === 'home') setScreen('home');
           else setScreen('exit');
+        }}
+      />
+    );
+  }
+
+  // Model configuration screens for existing variants
+  if (screen === 'manage-models-opus' && selectedVariant) {
+    return (
+      <Frame>
+        <Header title="Configure Models (1/3)" subtitle={`Update model mapping for ${selectedVariant.name}`} />
+        <Divider />
+        <Box flexDirection="column" marginY={1}>
+          <Box marginBottom={1}>
+            <Text color={colors.textMuted}>
+              Map Claude Code's model aliases to your provider's models.{'\n'}
+              These settings will be saved to the variant's configuration.
+            </Text>
+          </Box>
+          <TextField
+            label="Opus model (most capable)"
+            value={modelOpus}
+            onChange={setModelOpus}
+            onSubmit={() => setScreen('manage-models-sonnet')}
+            placeholder={selectedVariant.provider === 'openrouter' ? 'anthropic/claude-3-opus' : 'ollama/llama3.2:70b'}
+            hint="Used for complex reasoning tasks"
+          />
+        </Box>
+        <Divider />
+        <HintBar />
+      </Frame>
+    );
+  }
+
+  if (screen === 'manage-models-sonnet' && selectedVariant) {
+    return (
+      <Frame>
+        <Header title="Configure Models (2/3)" subtitle={`Update model mapping for ${selectedVariant.name}`} />
+        <Divider />
+        <Box flexDirection="column" marginY={1}>
+          <TextField
+            label="Sonnet model (balanced)"
+            value={modelSonnet}
+            onChange={setModelSonnet}
+            onSubmit={() => setScreen('manage-models-haiku')}
+            placeholder={selectedVariant.provider === 'openrouter' ? 'anthropic/claude-3.5-sonnet' : 'ollama/llama3.2'}
+            hint="Default model for most tasks"
+          />
+        </Box>
+        <Divider />
+        <HintBar />
+      </Frame>
+    );
+  }
+
+  if (screen === 'manage-models-haiku' && selectedVariant) {
+    return (
+      <Frame>
+        <Header title="Configure Models (3/3)" subtitle={`Update model mapping for ${selectedVariant.name}`} />
+        <Divider />
+        <Box flexDirection="column" marginY={1}>
+          <TextField
+            label="Haiku model (fastest)"
+            value={modelHaiku}
+            onChange={setModelHaiku}
+            onSubmit={() => setScreen('manage-models-saving')}
+            placeholder={selectedVariant.provider === 'openrouter' ? 'anthropic/claude-3-haiku' : 'ollama/llama3.2'}
+            hint="Used for quick tasks and subagents. Press Enter to save."
+          />
+        </Box>
+        <Divider />
+        <HintBar />
+      </Frame>
+    );
+  }
+
+  if (screen === 'manage-models-saving' && selectedVariant) {
+    return <ProgressScreen title="Saving model configuration" lines={progressLines} />;
+  }
+
+  if (screen === 'manage-models-done') {
+    return (
+      <CompletionScreen
+        title="Models Updated"
+        lines={doneLines}
+        summary={completionSummary}
+        nextSteps={completionNextSteps}
+        help={completionHelp}
+        shareStatus={shareStatus}
+        onDone={value => {
+          if (value === 'home') setScreen('home');
+          else setScreen('manage-actions');
         }}
       />
     );

@@ -23,27 +23,38 @@ interface VariantActionsScreenProps {
   onUpdate: () => void;
   onTweak: () => void;
   onRemove: () => void;
+  onConfigureModels?: () => void;
   onBack: () => void;
 }
+
+// Providers that require model mapping
+const MODEL_MAPPING_PROVIDERS = ['openrouter', 'litellm'];
 
 export const VariantActionsScreen: React.FC<VariantActionsScreenProps> = ({
   meta,
   onUpdate,
   onTweak,
   onRemove,
+  onConfigureModels,
   onBack,
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
+  const requiresModelMapping = meta.provider && MODEL_MAPPING_PROVIDERS.includes(meta.provider);
+
   const actions: MenuItem[] = [
     { value: 'update', label: 'Update', description: 'Re-sync binary + patches' },
+    ...(requiresModelMapping && onConfigureModels
+      ? [{ value: 'models', label: 'Configure Models', description: 'Edit Opus/Sonnet/Haiku mapping' }]
+      : []),
     { value: 'tweak', label: 'Customize', description: 'Open tweakcc' },
-    { value: 'remove', label: 'Remove', description: 'Delete variant', icon: 'exit' },
-    { value: 'back', label: 'Back', icon: 'back' },
+    { value: 'remove', label: 'Remove', description: 'Delete variant', icon: 'exit' as const },
+    { value: 'back', label: 'Back', icon: 'back' as const },
   ];
 
   const handleSelect = (value: string) => {
     if (value === 'update') onUpdate();
+    if (value === 'models' && onConfigureModels) onConfigureModels();
     if (value === 'tweak') onTweak();
     if (value === 'remove') onRemove();
     if (value === 'back') onBack();
