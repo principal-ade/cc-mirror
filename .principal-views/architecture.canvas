@@ -1,0 +1,588 @@
+{
+  "nodes": [
+    {
+      "id": "group-user-interface",
+      "type": "group",
+      "label": "1. USER INTERFACE\nHow you interact with cc-mirror",
+      "x": 100,
+      "y": 20,
+      "width": 800,
+      "height": 320,
+      "color": "1"
+    },
+    {
+      "id": "group-orchestration",
+      "type": "group",
+      "label": "2. ORCHESTRATION\nProcesses your request and builds variants",
+      "x": 100,
+      "y": 360,
+      "width": 800,
+      "height": 320,
+      "color": "3"
+    },
+    {
+      "id": "group-assembly",
+      "type": "group",
+      "label": "3. ASSEMBLY STEPS\nActual work of creating/updating variants",
+      "x": 100,
+      "y": 700,
+      "width": 800,
+      "height": 140,
+      "color": "4"
+    },
+    {
+      "id": "group-customization",
+      "type": "group",
+      "label": "4. CUSTOMIZATION MODULES\nWhat makes each variant unique",
+      "x": 30,
+      "y": 860,
+      "width": 830,
+      "height": 140,
+      "color": "5"
+    },
+    {
+      "id": "group-infrastructure",
+      "type": "group",
+      "label": "5. INFRASTRUCTURE\nFile operations and configuration",
+      "x": 30,
+      "y": 1020,
+      "width": 550,
+      "height": 130,
+      "color": "6"
+    },
+    {
+      "id": "group-external",
+      "type": "group",
+      "label": "6. EXTERNAL DEPENDENCIES\nThird-party services and packages",
+      "x": 30,
+      "y": 1170,
+      "width": 780,
+      "height": 120,
+      "color": "2"
+    },
+    {
+      "id": "cli-entry",
+      "type": "text",
+      "text": "CLI Entry Point\n\n📍 src/cli/index.ts\n\nRoutes between TUI mode and CLI commands",
+      "x": 350,
+      "y": 80,
+      "width": 200,
+      "height": 100,
+      "pv": {
+        "nodeType": "component",
+        "shape": "rectangle",
+        "fill": "#3b82f6",
+        "stroke": "#1d4ed8",
+        "icon": "Terminal",
+        "sources": ["src/cli/index.ts"]
+      }
+    },
+    {
+      "id": "tui-layer",
+      "type": "text",
+      "text": "TUI - Interactive Wizard\n\n📍 src/tui/\n\nReact/Ink forms and screens",
+      "x": 120,
+      "y": 210,
+      "width": 180,
+      "height": 110,
+      "pv": {
+        "nodeType": "component",
+        "shape": "rectangle",
+        "fill": "#10b981",
+        "stroke": "#059669",
+        "icon": "Layout",
+        "sources": ["src/tui/**/*.{ts,tsx}"]
+      }
+    },
+    {
+      "id": "cli-commands",
+      "type": "text",
+      "text": "CLI Commands\n\n📍 src/cli/commands/\n\nDirect command execution",
+      "x": 600,
+      "y": 210,
+      "width": 180,
+      "height": 110,
+      "pv": {
+        "nodeType": "component",
+        "shape": "rectangle",
+        "fill": "#10b981",
+        "stroke": "#059669",
+        "icon": "Command",
+        "sources": ["src/cli/commands/**/*.ts"]
+      }
+    },
+    {
+      "id": "core-logic",
+      "type": "text",
+      "text": "Core API\n\n📍 src/core/index.ts\n\ncreateVariant()\nupdateVariant()\nremoveVariant()",
+      "x": 350,
+      "y": 400,
+      "width": 200,
+      "height": 100,
+      "pv": {
+        "nodeType": "component",
+        "shape": "rectangle",
+        "fill": "#f59e0b",
+        "stroke": "#d97706",
+        "icon": "Cpu",
+        "sources": ["src/core/index.ts"]
+      }
+    },
+    {
+      "id": "variant-builder",
+      "type": "text",
+      "text": "Variant Builder\n\n📍 src/core/variant-builder/\n\nOrchestrates assembly steps\nReports progress",
+      "x": 350,
+      "y": 540,
+      "width": 200,
+      "height": 110,
+      "pv": {
+        "nodeType": "component",
+        "shape": "rectangle",
+        "fill": "#f59e0b",
+        "stroke": "#d97706",
+        "icon": "Package",
+        "sources": ["src/core/variant-builder/**/*.ts"]
+      }
+    },
+    {
+      "id": "creation-steps",
+      "type": "text",
+      "text": "Creation Steps\n\n📍 src/core/variant-builder/steps/\n\n1. Create directories\n2. Install Claude Code\n3. Write configs\n4. Apply theme\n5. Create launcher",
+      "x": 120,
+      "y": 730,
+      "width": 240,
+      "height": 90,
+      "pv": {
+        "nodeType": "component",
+        "shape": "rectangle",
+        "fill": "#8b5cf6",
+        "stroke": "#7c3aed",
+        "icon": "List",
+        "sources": ["src/core/variant-builder/steps/**/*.ts"]
+      }
+    },
+    {
+      "id": "update-steps",
+      "type": "text",
+      "text": "Update Steps\n\n📍 src/core/variant-builder/update-steps/\n\nUpdate existing variant configs",
+      "x": 540,
+      "y": 730,
+      "width": 240,
+      "height": 90,
+      "pv": {
+        "nodeType": "component",
+        "shape": "rectangle",
+        "fill": "#8b5cf6",
+        "stroke": "#7c3aed",
+        "icon": "RefreshCw",
+        "sources": ["src/core/variant-builder/update-steps/**/*.ts"]
+      }
+    },
+    {
+      "id": "provider-system",
+      "type": "text",
+      "text": "Providers\n\n📍 src/providers/\n\nZ.ai, MiniMax\nOpenRouter, etc.",
+      "x": 50,
+      "y": 890,
+      "width": 140,
+      "height": 90,
+      "pv": {
+        "nodeType": "component",
+        "shape": "hexagon",
+        "fill": "#06b6d4",
+        "stroke": "#0891b2",
+        "icon": "Cloud",
+        "sources": ["src/providers/**/*.ts"]
+      }
+    },
+    {
+      "id": "brand-system",
+      "type": "text",
+      "text": "Brands\n\n📍 src/brands/\n\nVisual themes",
+      "x": 220,
+      "y": 890,
+      "width": 130,
+      "height": 90,
+      "pv": {
+        "nodeType": "component",
+        "shape": "hexagon",
+        "fill": "#06b6d4",
+        "stroke": "#0891b2",
+        "icon": "Palette",
+        "sources": ["src/brands/**/*.ts"]
+      }
+    },
+    {
+      "id": "prompt-pack",
+      "type": "text",
+      "text": "Prompts\n\n📍 src/core/prompt-pack/\n\nCustom prompts",
+      "x": 380,
+      "y": 890,
+      "width": 130,
+      "height": 90,
+      "pv": {
+        "nodeType": "component",
+        "shape": "hexagon",
+        "fill": "#06b6d4",
+        "stroke": "#0891b2",
+        "icon": "FileText",
+        "sources": ["src/core/prompt-pack/**/*.ts"]
+      }
+    },
+    {
+      "id": "shell-integration",
+      "type": "text",
+      "text": "Shell Scripts\n\n📍 src/core/wrapper.ts\n\nLauncher scripts",
+      "x": 540,
+      "y": 890,
+      "width": 130,
+      "height": 90,
+      "pv": {
+        "nodeType": "component",
+        "shape": "hexagon",
+        "fill": "#06b6d4",
+        "stroke": "#0891b2",
+        "icon": "Terminal",
+        "sources": ["src/core/wrapper.ts", "src/core/shell-env.ts"]
+      }
+    },
+    {
+      "id": "combined-config",
+      "type": "text",
+      "text": "Configuration\n\n📍 src/core/\n\nSkills, MCP, File System",
+      "x": 700,
+      "y": 890,
+      "width": 140,
+      "height": 90,
+      "pv": {
+        "nodeType": "component",
+        "shape": "hexagon",
+        "fill": "#06b6d4",
+        "stroke": "#0891b2",
+        "icon": "Settings",
+        "sources": ["src/core/skills.ts", "src/core/claude-config.ts", "src/core/fs.ts"]
+      }
+    },
+    {
+      "id": "file-system",
+      "type": "text",
+      "text": "File System\n\n📍 src/core/fs.ts\n\nWrites to:\n~/.cc-mirror/<variant>/\n~/.local/bin/<variant>",
+      "x": 50,
+      "y": 1050,
+      "width": 200,
+      "height": 80,
+      "pv": {
+        "nodeType": "component",
+        "shape": "rectangle",
+        "fill": "#ec4899",
+        "stroke": "#db2777",
+        "icon": "FolderOpen",
+        "sources": ["src/core/fs.ts", "src/core/paths.ts"]
+      }
+    },
+    {
+      "id": "variant-output",
+      "type": "text",
+      "text": "OUTPUT\n\nEach variant is a standalone\nClaude Code installation\nwith custom config",
+      "x": 300,
+      "y": 1050,
+      "width": 260,
+      "height": 80,
+      "color": "3"
+    },
+    {
+      "id": "npm-packages",
+      "type": "text",
+      "text": "NPM: React + Ink\n\nTerminal UI framework",
+      "x": 50,
+      "y": 1200,
+      "width": 160,
+      "height": 70,
+      "pv": {
+        "nodeType": "service",
+        "shape": "hexagon",
+        "fill": "#64748b",
+        "stroke": "#475569",
+        "icon": "Package"
+      }
+    },
+    {
+      "id": "npm-tweakcc",
+      "type": "text",
+      "text": "NPM: tweakcc\n\nTheme customizer",
+      "x": 240,
+      "y": 1200,
+      "width": 160,
+      "height": 70,
+      "pv": {
+        "nodeType": "service",
+        "shape": "hexagon",
+        "fill": "#64748b",
+        "stroke": "#475569",
+        "icon": "Package"
+      }
+    },
+    {
+      "id": "claude-code",
+      "type": "text",
+      "text": "NPM: Claude Code\n\nInstalled per variant",
+      "x": 430,
+      "y": 1200,
+      "width": 160,
+      "height": 70,
+      "pv": {
+        "nodeType": "service",
+        "shape": "hexagon",
+        "fill": "#64748b",
+        "stroke": "#475569",
+        "icon": "Code"
+      }
+    },
+    {
+      "id": "external-services",
+      "type": "text",
+      "text": "AI APIs\n\nZ.ai, MiniMax,\nOpenRouter, Claude",
+      "x": 620,
+      "y": 1200,
+      "width": 160,
+      "height": 70,
+      "pv": {
+        "nodeType": "service",
+        "shape": "hexagon",
+        "fill": "#64748b",
+        "stroke": "#475569",
+        "icon": "Globe"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "fromNode": "cli-entry",
+      "toNode": "tui-layer",
+      "fromSide": "left",
+      "toSide": "top",
+      "label": "Interactive",
+      "pv": { "edgeType": "flow" }
+    },
+    {
+      "id": "e2",
+      "fromNode": "cli-entry",
+      "toNode": "cli-commands",
+      "fromSide": "right",
+      "toSide": "top",
+      "label": "Direct",
+      "pv": { "edgeType": "flow" }
+    },
+    {
+      "id": "e3",
+      "fromNode": "tui-layer",
+      "toNode": "core-logic",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "pv": { "edgeType": "flow" }
+    },
+    {
+      "id": "e4",
+      "fromNode": "cli-commands",
+      "toNode": "core-logic",
+      "fromSide": "bottom",
+      "toSide": "right",
+      "pv": { "edgeType": "flow" }
+    },
+    {
+      "id": "e5",
+      "fromNode": "core-logic",
+      "toNode": "variant-builder",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "pv": { "edgeType": "flow" }
+    },
+    {
+      "id": "e6",
+      "fromNode": "variant-builder",
+      "toNode": "creation-steps",
+      "fromSide": "left",
+      "toSide": "top",
+      "label": "Create mode",
+      "pv": { "edgeType": "flow" }
+    },
+    {
+      "id": "e7",
+      "fromNode": "variant-builder",
+      "toNode": "update-steps",
+      "fromSide": "right",
+      "toSide": "top",
+      "label": "Update mode",
+      "pv": { "edgeType": "flow" }
+    },
+    {
+      "id": "e8",
+      "fromNode": "creation-steps",
+      "toNode": "provider-system",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "label": "Get config",
+      "pv": { "edgeType": "integration" }
+    },
+    {
+      "id": "e9",
+      "fromNode": "creation-steps",
+      "toNode": "brand-system",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "label": "Apply theme",
+      "pv": { "edgeType": "integration" }
+    },
+    {
+      "id": "e10",
+      "fromNode": "creation-steps",
+      "toNode": "prompt-pack",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "label": "Add prompts",
+      "pv": { "edgeType": "integration" }
+    },
+    {
+      "id": "e11",
+      "fromNode": "creation-steps",
+      "toNode": "shell-integration",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "label": "Create launcher",
+      "pv": { "edgeType": "integration" }
+    },
+    {
+      "id": "e12",
+      "fromNode": "creation-steps",
+      "toNode": "combined-config",
+      "fromSide": "right",
+      "toSide": "top",
+      "label": "Configure",
+      "pv": { "edgeType": "integration" }
+    },
+    {
+      "id": "e13",
+      "fromNode": "update-steps",
+      "toNode": "provider-system",
+      "fromSide": "left",
+      "toSide": "top",
+      "pv": { "edgeType": "integration" }
+    },
+    {
+      "id": "e14",
+      "fromNode": "update-steps",
+      "toNode": "brand-system",
+      "fromSide": "left",
+      "toSide": "top",
+      "pv": { "edgeType": "integration" }
+    },
+    {
+      "id": "e15",
+      "fromNode": "update-steps",
+      "toNode": "shell-integration",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "pv": { "edgeType": "integration" }
+    },
+    {
+      "id": "e16",
+      "fromNode": "creation-steps",
+      "toNode": "file-system",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "label": "Write files",
+      "pv": { "edgeType": "integration" }
+    },
+    {
+      "id": "e17",
+      "fromNode": "update-steps",
+      "toNode": "file-system",
+      "fromSide": "bottom",
+      "toSide": "right",
+      "label": "Update files",
+      "pv": { "edgeType": "integration" }
+    },
+    {
+      "id": "e18",
+      "fromNode": "file-system",
+      "toNode": "variant-output",
+      "fromSide": "right",
+      "toSide": "left",
+      "pv": { "edgeType": "flow" }
+    },
+    {
+      "id": "e19",
+      "fromNode": "provider-system",
+      "toNode": "external-services",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "label": "Configures",
+      "pv": { "edgeType": "integration" }
+    },
+    {
+      "id": "e20",
+      "fromNode": "brand-system",
+      "toNode": "npm-tweakcc",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "label": "Uses",
+      "pv": { "edgeType": "integration" }
+    },
+    {
+      "id": "e21",
+      "fromNode": "tui-layer",
+      "toNode": "npm-packages",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "label": "Built with",
+      "pv": { "edgeType": "integration" }
+    },
+    {
+      "id": "e22",
+      "fromNode": "creation-steps",
+      "toNode": "claude-code",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "label": "npm install",
+      "pv": { "edgeType": "integration" }
+    }
+  ],
+  "pv": {
+    "name": "CC-Mirror Architecture",
+    "version": "1.0.0",
+    "description": "How cc-mirror creates custom Claude Code variants with different AI providers",
+    "edgeTypes": {
+      "flow": {
+        "style": "solid",
+        "color": "#3b82f6",
+        "width": 3,
+        "directed": true,
+        "animation": {
+          "type": "flow",
+          "duration": 2000
+        }
+      },
+      "integration": {
+        "style": "dashed",
+        "color": "#f59e0b",
+        "width": 2,
+        "directed": true
+      }
+    },
+    "display": {
+      "layout": "manual",
+      "theme": {
+        "primary": "#3b82f6",
+        "success": "#22c55e",
+        "warning": "#f59e0b",
+        "danger": "#ef4444"
+      },
+      "animations": {
+        "enabled": true,
+        "speed": 1.0
+      }
+    }
+  }
+}

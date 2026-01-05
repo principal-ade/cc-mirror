@@ -1,0 +1,58 @@
+version: "1.0.0"
+name: "CC-Mirror Component Library"
+
+nodeComponents:
+  component:
+    description: "A functional component or module in the application"
+    defaultLabel: "Component"
+    shape: "rectangle"
+    icon: "Box"
+    color: "#3b82f6"
+    dataSchema:
+      component_type:
+        type: "string"
+        label: "Component Type"
+        displayInInfo: "Type of component (ui, logic, service, integration)"
+      file_path:
+        type: "string"
+        label: "File Path"
+        displayInInfo: "Primary file or directory path"
+      responsibility:
+        type: "string"
+        label: "Responsibility"
+        displayInInfo: "Main responsibility of this component"
+    sources:
+      - "src/**/*.ts"
+
+  service:
+    description: "An external service or API that the application integrates with"
+    defaultLabel: "External Service"
+    shape: "hexagon"
+    icon: "Cloud"
+    color: "#8b5cf6"
+    dataSchema:
+      service_type:
+        type: "string"
+        label: "Service Type"
+        displayInInfo: "Type of service (api, tool, library)"
+      optional:
+        type: "boolean"
+        label: "Optional"
+        displayInInfo: "Whether this service is optional"
+
+edgeComponents:
+  flow:
+    description: "Direction of data or control flow between components"
+    style: "solid"
+    color: "#64748b"
+    width: 2
+    directed: true
+    label: "Flow"
+
+  integration:
+    description: "Integration or dependency relationship"
+    style: "dashed"
+    color: "#f59e0b"
+    width: 2
+    directed: true
+    label: "Integration"
