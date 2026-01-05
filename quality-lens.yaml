@@ -1,0 +1,12 @@
+lenses:
+  # TypeScript - needs --listFiles to report analyzed files
+  typescript: npx tsc --noEmit --listFiles
+
+  # ESLint - needs --format json for structured output
+  eslint: npx eslint src test scripts --format json
+
+  # Prettier - needs proper flags for file reporting
+  prettier: npx prettier --check "**/*.{ts,tsx,json,md}" --no-error-on-unmatched-pattern --log-level debug
+
+  # Node Test - with coverage for per-file metrics (requires Node 20+)
+  node-test: node --test --import tsx --test-reporter tap --experimental-test-coverage 'test/**/*.test.ts'
